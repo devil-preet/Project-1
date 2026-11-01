@@ -1,0 +1,93 @@
+rules_version = '2';
+
+// Tenant isolation model
+// ----------------------
+// * All WRITES are denied to clients. Mutations go through Next.js server
+//   actions that use the Admin SDK after verifying membership + role
+//   (src/lib/auth/guard.ts). Rules are the second, independent layer.
+// * Reads are allowed only to members of the owning business.
+// * A narrow public-read surface exists for the future storefront (System 2):
+//   only ACTIVE products / ACTIVE categories / branding+store settings of a
+//   business whose storeStatus == 'published'.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function memberPath(businessId) {
+      return /databases/$(database)/documents/businesses/$(businessId)/members/$(request.auth.uid);
+    }
+
+    function isMember(businessId) {
+      return signedIn() && exists(memberPath(businessId));
+    }
+
+    function roleOf(businessId) {
+      return get(memberPath(businessId)).data.role;
+    }
+
+    function isAdminish(businessId) {
+      return isMember(businessId) && roleOf(businessId) in ['OWNER', 'ADMIN'];
+    }
+
+    function isPublished(businessId) {
+      return get(/databases/$(database)/documents/businesses/$(businessId)).data.storeStatus == 'published';
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // slug -> businessId lookup. Public so System 2 can resolve brand URLs.
+    match /slugs/{slug} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /businesses/{businessId} {
+      allow read: if isMember(businessId);
+      allow write: if false;
+
+      match /members/{memberId} {
+        allow read: if isMember(businessId);
+        allow write: if false;
+      }
+
+      match /invitations/{invitationId} {
+        allow read: if isAdminish(businessId);
+        allow write: if false;
+      }
+
+      match /categories/{categoryId} {
+        allow read: if isMember(businessId)
+          || (resource.data.active == true && isPublished(businessId));
+        allow write: if false;
+      }
+
+      match /products/{productId} {
+        allow read: if isMember(businessId)
+          || (resource.data.status == 'active' && isPublished(businessId));
+        allow write: if false;
+      }
+
+      match /settings/{docId} {
+        allow read: if isMember(businessId)
+          || (docId in ['branding', 'store'] && isPublished(businessId));
+        allow write: if false;
+      }
+
+      match /media/{mediaId} {
+        allow read: if isMember(businessId);
+        allow write: if false;
+      }
+    }
+
+    // Server-only bookkeeping (rate limits, category slug reservations, ...).
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

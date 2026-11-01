@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand Portal - Test Workflow Mockup</title>
+<style>
+  :root{--bg:#f7f7f5;--card:#fff;--ink:#16181d;--mute:#5d6470;--line:#e2e4e8;--accent:#2f5bd8;--ok:#14804a;--warn:#b45309;--bad:#b42318;--chip:#eef1f7}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#171a21;--ink:#e8eaee;--mute:#9aa3b2;--line:#2a2f3a;--accent:#7ea0ff;--ok:#4cc38a;--warn:#f0b35a;--bad:#ff8a80;--chip:#222836}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 16px 64px}
+  main{max-width:1080px;margin:0 auto}
+  h1{font-size:28px;margin:36px 0 6px;letter-spacing:-.02em}
+  h2{font-size:20px;margin:40px 0 12px;letter-spacing:-.01em}
+  h3{font-size:15px;margin:0 0 6px}
+  p{margin:6px 0}.mute{color:var(--mute)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .chip{display:inline-block;background:var(--chip);border-radius:999px;padding:1px 9px;font-size:12px;margin:2px 2px 2px 0}
+  code{background:var(--chip);border-radius:5px;padding:0 5px;font-size:13px}
+  .scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+  .pass{color:var(--ok);font-weight:600}.fail{color:var(--bad);font-weight:600}.na{color:var(--warn);font-weight:600}
+  /* flow */
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px}
+  .step{flex:1 1 150px;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;position:relative}
+  .step b{display:block;font-size:13px}.step span{font-size:12.5px;color:var(--mute)}
+  .step .n{position:absolute;top:-9px;left:10px;background:var(--accent);color:#fff;border-radius:999px;font-size:11px;padding:0 7px}
+  .arrow{align-self:center;color:var(--mute);font-size:18px}
+  .lane{border-left:4px solid var(--accent);padding-left:12px;margin:14px 0}
+  .lane.pub{border-color:var(--ok)}.lane.sec{border-color:var(--bad)}.lane.test{border-color:var(--warn)}
+  /* browser mockups */
+  .win{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+  .bar{display:flex;gap:6px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--line);background:var(--chip);font-size:12px;color:var(--mute)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+  .url{flex:1;background:var(--card);border-radius:6px;padding:1px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .body{padding:12px;font-size:13px}
+  .side{display:grid;grid-template-columns:110px 1fr;gap:10px}
+  .nav div{padding:4px 8px;border-radius:6px;color:var(--mute)}.nav .on{background:var(--ink);color:var(--bg)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .pc{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .pc i{display:block;aspect-ratio:1;background:linear-gradient(135deg,#3b5bdb,#9775fa)}
+  .pc:nth-child(2) i{background:linear-gradient(135deg,#c2410c,#f59e0b)}.pc:nth-child(3) i{background:linear-gradient(135deg,#0f766e,#34d399)}
+  .pc div{padding:5px 7px;font-size:11.5px}
+  .hero{background:#7c2d12;color:#fff;border-radius:10px;padding:18px;text-align:center;margin-bottom:8px}
+  .badge{font-size:10.5px;background:var(--ink);color:var(--bg);border-radius:999px;padding:0 6px}
+  details{margin:6px 0}summary{cursor:pointer;font-weight:600}
+  pre{background:var(--chip);border-radius:8px;padding:10px;overflow-x:auto;font-size:12.5px;margin:6px 0}
+  .legend span{margin-right:14px;font-size:13px}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Brand Portal - Test Workflow Mockup</h1>
+<p class="mute">Multi-tenant business management portal (System 1) plus a public customer storefront. Next.js 16 App Router, TypeScript strict, Tailwind 4, shadcn/ui, Firebase Auth / Firestore / Storage, Zod, Vitest. This page explains the product workflow, what is tested, how, and the exact results so far.</p>
+<p>
+  <span class="chip">All writes happen server-side (Admin SDK)</span>
+  <span class="chip">Tenant = <code>businesses/{id}</code></span>
+  <span class="chip">Access = <code>members/{uid}</code> document only</span>
+  <span class="chip">Prices = integer minor units</span>
+</p>
+
+<h2>1. Product workflow (what a tester follows)</h2>
+<div class="lane">
+  <h3>Owner journey</h3>
+  <div class="flow">
+    <div class="step"><i class="n">1</i><b>Register</b><span><code>/register</code> then verify email</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">2</i><b>Login</b><span>HttpOnly session cookie <code>__session</code></span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">3</i><b>Onboarding</b><span><code>/onboarding</code> 4-step wizard, atomic transaction creates the business</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">4</i><b>Dashboard</b><span>list of my businesses, "Open workspace"</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">5</i><b>Workspace</b><span><code>/b/{id}/overview</code></span></div>
+  </div>
+</div>
+<div class="lane">
+  <h3>Catalogue management (inside the workspace)</h3>
+  <div class="flow">
+    <div class="step"><i class="n">6</i><b>Categories</b><span>create, edit, reorder, hide, delete (blocked while products exist)</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">7</i><b>Products</b><span>name, category, price, images, description, optional SKU / stock / SEO</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">8</i><b>Images</b><span>PNG/JPEG/WebP up to 8 MB, first image is the cover</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">9</i><b>Publish</b><span>product needs an image; store needs the "Store published" switch</span></div>
+  </div>
+</div>
+<div class="lane pub">
+  <h3>Public storefront (no login)</h3>
+  <div class="flow">
+    <div class="step"><i class="n">10</i><b>Home</b><span><code>/s/{slug}</code> hero, categories, featured, latest</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">11</i><b>Category</b><span><code>/s/{slug}/category/{c}</code> sort + pagination</span></div><div class="arrow">&rarr;</div>
+    <div class="step"><i class="n">12</i><b>Product</b><span><code>/s/{slug}/product/{p}</code> gallery, price, stock</span></div>
+  </div>
+  <p class="mute">Visible only if: store published AND product <code>active</code> AND its category <code>active</code>. Otherwise HTTP 404 (indistinguishable from "does not exist").</p>
+</div>
+
+<h2>2. Screen mockups (what the tester should see)</h2>
+<div class="grid g2">
+  <div class="win"><div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="url">/b/{businessId}/products</span></div>
+    <div class="body"><div class="side">
+      <div class="nav"><div>Overview</div><div class="on">Products</div><div>Categories</div><div>Branding</div><div>Media</div><div>Team</div><div>Settings</div></div>
+      <div><b>Products</b> <span class="mute">- visual catalogue</span>
+        <p class="mute" style="margin:4px 0 8px">[Search] [All categories] [All statuses] [Newest first] [Apply] &nbsp; <span class="badge">+ Add product</span></p>
+        <div class="cards"><div class="pc"><i></i><div><b>QA Block-print Kurta</b><br>QA Kurtas<br>&#8377;1,299.50 &middot; In stock<br><span class="badge">Live</span></div></div><div class="pc"><i></i><div><b>QA Banarasi Saree</b><br>QA Sarees<br>&#8377;8,999.00 &middot; In stock<br><span class="badge">Draft</span></div></div><div class="pc"><i></i><div><b>QA Jute Bag</b><br>QA Accessories<br>&#8377;499.00 &middot; Out of stock<br><span class="badge">Live</span></div></div></div>
+      </div></div></div></div>
+
+  <div class="win"><div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="url">/b/{businessId}/products/new</span></div>
+    <div class="body">
+      <b>Add product</b>
+      <p>Product name [__________]<br>Category [Select... v] [+ New] <span class="mute">(quick-create keeps typed data)</span><br>Images [cover][+] <span class="mute">0/10</span><br>Price (INR) [____] &nbsp; Short description [____]<br>Full description [________]<br><span class="mute">&#9656; More options (SKU, stock, SEO, featured)</span></p>
+      <p>[Save as draft] [Publish] [Cancel]</p>
+    </div></div>
+
+  <div class="win"><div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="url">/s/{slug} (public)</span></div>
+    <div class="body"><div class="hero"><b style="font-size:18px">Saffron Threads</b><br><small>Handloom clothing made in small batches.</small></div>
+      <b>Shop by category</b> <span class="mute">[Kurtas] [Sarees] [Dupattas]</span>
+      <div class="cards" style="margin-top:8px"><div class="pc"><i></i><div>Block-print Kurta<br><b>&#8377;1,299.50</b></div></div><div class="pc"><i></i><div>Chanderi Saree<br><b>&#8377;4,200.00</b></div></div><div class="pc"><i></i><div>Silk Scarf<br><b>&#8377;899.00</b></div></div></div>
+    </div></div>
+
+  <div class="win"><div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="url">/b/{businessId}/settings</span></div>
+    <div class="body"><b>Settings</b>
+      <p><b>Storefront visibility</b> &nbsp; [ON] Store published<br><span class="mute">Customers can browse live products.</span></p>
+      <p><b>Store details</b><br>Store name [____] &nbsp; Currency [INR] <span class="mute">(locked once products exist)</span></p></div></div>
+</div>
+
+<h2>3. Architecture in one picture</h2>
+<div class="card scroll"><pre>Browser
+  |  pages (RSC)  /b/[id]/*   -- requireWorkspace(id, permission)  --> session cookie -> verifyIdToken/revocation
+  |  public pages /s/[slug]/* -- public-store.service (allow-listed fields only)
+  |  JSON/multipart API  /api/b/[id]/{categories,products,settings,media}
+  v                           CSRF -> session -> size -> Zod -> authorizeMember(members/{uid}) -> rate limit
+Server (Next.js route handlers / server components, Firebase Admin SDK)
+  |-- services: category / product / media / settings / public-store / onboarding
+  v
+Firestore  businesses/{id}/{categories,products,media,settings,members,slugReservations}   slugs/{slug}
+Storage    businesses/{id}/media/{uuid}.{png|jpg|webp}   (never linked directly; served by app routes)
+Images:  /api/b/{id}/media/{mediaId}   (members only)    /api/public/media/{id}/{mediaId}  (only if publicly visible)</pre></div>
+
+<h2>4. Roles (enforced on the server; hiding buttons is not security)</h2>
+<div class="card scroll"><table>
+<tr><th>Capability</th><th>OWNER</th><th>ADMIN</th><th>MANAGER</th><th>EDITOR</th></tr>
+<tr><td>Create/edit products, upload images</td><td class="pass">yes</td><td class="pass">yes</td><td class="pass">yes</td><td class="pass">yes</td></tr>
+<tr><td>Publish / archive / feature / delete products</td><td class="pass">yes</td><td class="pass">yes</td><td class="pass">yes</td><td class="fail">no (drafts only)</td></tr>
+<tr><td>Create/edit/delete categories</td><td class="pass">yes</td><td class="pass">yes</td><td class="pass">yes</td><td class="fail">no</td></tr>
+<tr><td>Branding (logo, colours)</td><td class="pass">yes</td><td class="pass">yes</td><td class="pass">yes</td><td class="fail">no</td></tr>
+<tr><td>Store settings, publish store</td><td class="pass">yes</td><td class="pass">yes</td><td class="fail">no</td><td class="fail">no</td></tr>
+<tr><td>Delete business</td><td class="pass">yes</td><td class="fail">no</td><td class="fail">no</td><td class="fail">no</td></tr>
+</table></div>
+
+<h2>5. Test workflow (layers, in the order they run)</h2>
+<div class="flow">
+  <div class="step"><i class="n">1</i><b>Static</b><span><code>tsc --noEmit</code>, ESLint</span></div><div class="arrow">&rarr;</div>
+  <div class="step"><i class="n">2</i><b>Unit</b><span>Vitest, no emulator</span></div><div class="arrow">&rarr;</div>
+  <div class="step"><i class="n">3</i><b>Rules</b><span>Firestore + Storage emulators</span></div><div class="arrow">&rarr;</div>
+  <div class="step"><i class="n">4</i><b>Integration</b><span>real services + route handlers on Auth/Firestore/Storage emulators</span></div><div class="arrow">&rarr;</div>
+  <div class="step"><i class="n">5</i><b>HTTP e2e</b><span>boots the real Next server, drives it with fetch</span></div><div class="arrow">&rarr;</div>
+  <div class="step"><i class="n">6</i><b>Browser</b><span>real Chrome, production build, strict CSP, desktop + mobile</span></div><div class="arrow">&rarr;</div>
+  <div class="step"><i class="n">7</i><b>Manual / extension</b><span>regression on the real project (see prompts)</span></div>
+</div>
+<p class="mute">Commands: <code>npm run typecheck</code> &middot; <code>npm run lint</code> &middot; <code>npm test</code> &middot; <code>npm run test:rules</code> &middot; <code>npm run test:integration</code> &middot; <code>npm run test:e2e</code> &middot; <code>npm run build</code>. Destructive suites refuse to run unless Firebase emulators are active (project <code>demo-brand-portal</code>).</p>
+
+<h2>6. Latest results</h2>
+<div class="card scroll"><table>
+<tr><th>Layer</th><th>Result</th><th>Scope</th></tr>
+<tr><td>TypeScript / ESLint</td><td class="pass">0 errors</td><td>strict, React Compiler lint rules</td></tr>
+<tr><td>Unit</td><td class="pass">86 / 86</td><td>money, validation, slugs, query plans, index coverage, roles, theme, CSP, CSRF</td></tr>
+<tr><td>Rules</td><td class="pass">57 / 57</td><td>tenant isolation, server-only writes, public read surface</td></tr>
+<tr><td>Integration</td><td class="pass">120 / 120</td><td>auth, guard, onboarding, categories, products, media, storefront visibility, roles, cross-tenant</td></tr>
+<tr><td>HTTP e2e</td><td class="pass">65 / 65</td><td>full flow incl. publish, hide category, public images, revocation</td></tr>
+<tr><td>Real Chrome (production build, strict CSP)</td><td class="pass">52 / 52</td><td>desktop 1280 + mobile 390, 0 console / CSP errors</td></tr>
+<tr><td>Real Firebase project</td><td class="na">not run</td><td>all of the above used emulators; manual regression on real data is the next step</td></tr>
+</table></div>
+
+<h2>7. Test case matrix</h2>
+<div class="card scroll"><table>
+<tr><th>Area</th><th>Key cases</th><th>Expected</th></tr>
+<tr><td>Categories</td><td>create, derive slug, duplicate name, explicit duplicate slug, reorder, search prefix, pagination, delete with products</td><td>unique slug per business (<code>-2</code>), 409 <code>slug_taken</code> / <code>conflict</code>, order persists</td></tr>
+<tr><td>Products</td><td>float / negative / huge price, compare-at &le; price, missing fields, &gt;10 images, duplicate image, foreign category, foreign image</td><td>400 with field errors; nothing written</td></tr>
+<tr><td>Publishing</td><td>publish without image, with image, editor attempts</td><td>refused with message; editor gets 403</td></tr>
+<tr><td>Counters</td><td>move between categories, delete product</td><td><code>productCount</code> updates in the same transaction</td></tr>
+<tr><td>Images</td><td>PNG/JPEG/WebP by content, text-as-png, SVG, GIF, PDF, empty, &gt;8 MB</td><td>only real images accepted; stored under <code>businesses/{id}/media/</code></td></tr>
+<tr><td>Storefront</td><td>unpublished store, draft, archived, hidden category, unknown slug, malformed slug</td><td>all 404; only allow-listed fields in HTML</td></tr>
+<tr><td>Public images</td><td>live vs draft vs unattached vs other tenant</td><td>200 only when attached to visible content</td></tr>
+<tr><td>Tenancy</td><td>other business's user, forged <code>businessId</code>, path tricks, anonymous, unverified email</td><td>403 / 404 / 401 with no data leak</td></tr>
+<tr><td>CSRF / input</td><td>missing <code>X-Requested-With</code>, cross-site, body &gt;16 KB, smuggled role/businessId</td><td>403 <code>csrf</code>, 400, ignored fields</td></tr>
+<tr><td>UI</td><td>validation messages, quick-create category keeps form data, upload progress, cover switch, confirmations, empty / loading / error states</td><td>no layout jump, no horizontal scroll at 390 px</td></tr>
+</table></div>
+
+<h2>8. Seeding plan for the manual regression</h2>
+<div class="grid g3">
+  <div class="card"><h3>Business A (existing)</h3><p class="mute">5 categories x 10 products = 50 products, 2 featured / 2 drafts per category.</p><span class="chip">QA Kurtas</span><span class="chip">QA Sarees</span><span class="chip">QA Dupattas</span><span class="chip">QA Accessories</span><span class="chip">QA Home Textiles</span></div>
+  <div class="card"><h3>Business B (new)</h3><p class="mute">Created in the onboarding wizard (one only, slug is permanent), then the same 5 x 10 data set. Default currency INR.</p></div>
+  <div class="card"><h3>Safety</h3><p class="mute">Everything prefixed <code>QA </code>. Pre-existing records untouched. Currency never changed on existing businesses. Cleanup list returned in the report.</p></div>
+</div>
+
+<h2>9. API surface (JSON POST needs <code>X-Requested-With: fetch</code>, same origin, session cookie)</h2>
+<div class="card scroll"><table>
+<tr><th>Endpoint</th><th>Actions / body</th><th>Permission</th></tr>
+<tr><td><code>POST /api/b/{id}/categories</code></td><td>create | update | delete | setActive | move</td><td>category:write (delete: category:delete)</td></tr>
+<tr><td><code>POST /api/b/{id}/products</code></td><td>create | update | delete | setStatus</td><td>product:write (delete: product:delete; status/featured: product:publish)</td></tr>
+<tr><td><code>POST /api/b/{id}/settings</code></td><td>store | publish | branding</td><td>settings:update / branding:update</td></tr>
+<tr><td><code>POST /api/b/{id}/media</code></td><td>multipart, field <code>file</code></td><td>media:upload</td></tr>
+<tr><td><code>GET /api/b/{id}/media/{mediaId}</code></td><td>image bytes</td><td>member</td></tr>
+<tr><td><code>GET /api/public/media/{id}/{mediaId}</code></td><td>image bytes</td><td>public, only if visible</td></tr>
+</table>
+<details><summary>Example product create body</summary>
+<pre>{"action":"create","product":{
+  "name":"QA Linen Kurta","categoryId":"&lt;categoryId&gt;","description":"Soft linen kurta.",
+  "shortDescription":"","priceCents":129950,"compareAtPriceCents":null,"sku":"QA-KUR-03",
+  "stockQuantity":5,"availability":"in_stock","featured":false,
+  "imageIds":["&lt;mediaId&gt;"],"status":"active"}}</pre></details>
+<details><summary>Error shape</summary>
+<pre>{"ok":false,"code":"invalid_input","error":"Please check the highlighted fields and try again.",
+ "fieldErrors":{"priceCents":["Price must be a whole number of minor units"]}}
+codes: invalid_input 400 | unauthenticated 401 | forbidden 403 | csrf 403 | not_found 404 | conflict 409 | slug_taken 409 | rate_limited 429</pre></details></div>
+
+<h2>10. What to ask ChatGPT to do with this</h2>
+<div class="card">
+  <p>Paste this page together with the code. Suggested requests:</p>
+  <ul>
+    <li>Review the code against section 4 (roles) and section 7 (matrix): find authorization, tenant-isolation or validation gaps that the tests do not cover.</li>
+    <li>Propose additional test cases (edge cases, race conditions, abuse cases) and write them in Vitest style matching <code>tests/integration/catalog.test.ts</code>.</li>
+    <li>Check the public storefront for data exposure: confirm only the fields listed in <code>public-store.service.ts</code> can leave the server.</li>
+    <li>Point out accessibility and responsive issues in the product form and storefront pages.</li>
+  </ul>
+  <p class="mute">Do not share secrets: <code>.env.local</code>, service-account keys and tokens must not be pasted. The repository documentation contains none.</p>
+</div>
+
+<p class="legend mute" style="margin-top:28px"><span class="pass">pass</span><span class="fail">blocked / not allowed</span><span class="na">not yet run</span></p>
+</main>
+</body>
+</html>

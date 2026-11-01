@@ -1,0 +1,41 @@
+rules_version = '2';
+
+// Every object lives under businesses/{businessId}/media/. Membership is
+// resolved from Firestore, so a user can only write into the folder of a
+// business they belong to. Objects are immutable once written.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function memberPath(businessId) {
+      return /databases/(default)/documents/businesses/$(businessId)/members/$(request.auth.uid);
+    }
+
+    function isMember(businessId) {
+      return request.auth != null && firestore.exists(memberPath(businessId));
+    }
+
+    function role(businessId) {
+      return firestore.get(memberPath(businessId)).data.role;
+    }
+
+    function validImage() {
+      return request.resource.size > 0
+        && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType in ['image/jpeg', 'image/png', 'image/webp'];
+    }
+
+    match /businesses/{businessId}/media/{fileName} {
+      // Brand/product imagery is public by design (consumed by the storefront).
+      allow read: if true;
+      // `resource == null` guarantees create-only: overwriting an existing
+      // object is refused even where the platform evaluates it as a create.
+      allow create: if resource == null && isMember(businessId) && validImage();
+      allow update: if false;
+      allow delete: if isMember(businessId) && role(businessId) in ['OWNER', 'ADMIN', 'MANAGER'];
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
