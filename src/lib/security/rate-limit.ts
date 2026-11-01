@@ -18,7 +18,14 @@ export interface RateRule {
  * Fails CLOSED: if the store is unreachable, the request is refused.
  */
 export async function enforceRateLimit(rules: RateRule[]): Promise<void> {
-  const db = adminDb();
+  let db: ReturnType<typeof adminDb>;
+  try {
+    db = adminDb();
+  } catch (e) {
+    // Misconfigured credentials: log a clear message and fail closed without an unhandled throw.
+    console.error("[rate-limit] admin init failed, failing closed:", e instanceof Error ? e.message : "unknown error");
+    throw new AuthError("internal");
+  }
   for (const rule of rules) {
     const id = createHash("sha256").update(rule.key).digest("hex");
     const ref = db.collection("rateLimits").doc(id);

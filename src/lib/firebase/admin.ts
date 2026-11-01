@@ -1,5 +1,5 @@
 import "server-only";
-import { applicationDefault, cert, getApps, initializeApp, type App } from "firebase-admin/app";
+import { applicationDefault, cert, getApps, initializeApp, type App, type ServiceAccount } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
@@ -12,6 +12,17 @@ import { getStorage } from "firebase-admin/storage";
  *  3. Application Default Credentials — automatic on App Hosting / Cloud Run,
  *     `gcloud auth application-default login` locally.
  */
+/** Parses raw or base64 service-account JSON. Error text never includes the value. */
+function parseServiceAccount(raw: string): ServiceAccount {
+  const trimmed = raw.trim();
+  try {
+    const json = trimmed.startsWith("{") ? trimmed : Buffer.from(trimmed, "base64").toString("utf8");
+    return JSON.parse(json) as ServiceAccount;
+  } catch {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT_JSON is malformed: expected service-account JSON, raw or base64-encoded.");
+  }
+}
+
 function createApp(): App {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
@@ -22,9 +33,13 @@ function createApp(): App {
   if (process.env.FIREBASE_AUTH_EMULATOR_HOST || process.env.FIRESTORE_EMULATOR_HOST) {
     return initializeApp({ projectId, storageBucket });
   }
-  if (raw) {
-    const json = raw.trim().startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
-    return initializeApp({ credential: cert(JSON.parse(json)), projectId, storageBucket });
+  if (raw?.trim()) {
+    return initializeApp({ credential: cert(parseServiceAccount(raw)), projectId, storageBucket });
+  }
+  // Vercel has no Application Default Credentials; falling through would only fail later with an
+  // opaque "Could not load the default credentials" from deep inside google-gax.
+  if (process.env.VERCEL) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT_JSON is not set (required on Vercel: raw or base64 service-account JSON).");
   }
   return initializeApp({ credential: applicationDefault(), projectId, storageBucket, serviceAccountId });
 }
