@@ -53,3 +53,6 @@ ui-debug.log
 *service-account*.json
 /.next-prod/
 /.next-nova/
+
+# Firebase Admin SDK key files
+*-firebase-adminsdk-*.json
