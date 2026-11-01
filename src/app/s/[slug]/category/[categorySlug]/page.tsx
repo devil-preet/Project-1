@@ -41,28 +41,28 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   return (
     <div>
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm opacity-70">
-        <Link href={`/s/${store.slug}`} className="hover:underline">Home</Link> <span aria-hidden>/</span> <span>{category.name}</span>
+      <nav aria-label="Breadcrumb" className="mb-5 font-mono text-xs text-[var(--sf-muted)]">
+        <Link href={`/s/${store.slug}`} className="hover:text-[var(--sf-fg)]">Home</Link> <span aria-hidden>/</span> <span className="text-[var(--sf-fg)]">{category.name}</span>
       </nav>
-      <header className="mb-8 overflow-hidden rounded-2xl bg-[var(--sf-primary)] text-[var(--sf-primary-fg)]">
-        <div className="relative px-6 py-10 sm:px-10">
-          {category.image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={category.image.url} alt="" className="absolute inset-0 size-full object-cover opacity-25" />
-          )}
-          <div className="relative">
-            <h1 className="text-3xl font-bold tracking-tight">{category.name}</h1>
-            {category.description && <p className="mt-2 max-w-2xl opacity-85">{category.description}</p>}
-          </div>
+      <header className="relative mb-8 overflow-hidden rounded-[32px] border border-[color:var(--sf-line-strong)] bg-[var(--sf-hero)] text-[var(--sf-hero-fg)]">
+        {category.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={category.image.url} alt="" className="absolute inset-0 size-full object-cover opacity-35" />
+        )}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-black/55 to-transparent" />
+        <div className="relative px-6 py-12 sm:px-12 sm:py-16">
+          <p className="mb-3 font-mono text-[11px] uppercase tracking-[.14em] opacity-80">Collection</p>
+          <h1 className="font-heading text-[clamp(34px,5.4vw,72px)] font-semibold leading-none tracking-[-.05em]">{category.name}</h1>
+          {category.description && <p className="mt-4 max-w-2xl text-lg opacity-90">{category.description}</p>}
         </div>
       </header>
 
-      <form action={base} className="mb-6 flex items-center justify-end gap-2 text-sm">
-        <label htmlFor="sort" className="opacity-70">Sort by</label>
-        <select id="sort" name="sort" defaultValue={sortKey} className="rounded-lg border border-[color-mix(in_srgb,var(--sf-fg)_25%,transparent)] bg-transparent px-2 py-1">
+      <form action={base} className="mb-8 flex items-center justify-end gap-2 rounded-full border border-[color:var(--sf-line)] bg-[var(--sf-surface)] py-2 pl-5 pr-2 text-sm">
+        <label htmlFor="sort" className="mr-auto text-[var(--sf-muted)]">Sort by</label>
+        <select id="sort" name="sort" defaultValue={sortKey} className="rounded-full border border-[color:var(--sf-line-strong)] bg-transparent px-3 py-1.5 outline-none focus-visible:ring-2 focus-visible:ring-[var(--sf-accent)]">
           {Object.entries(SORTS).map(([k, v]) => <option key={k} value={k} className="text-black">{v.label}</option>)}
         </select>
-        <button type="submit" className="rounded-lg border border-[color-mix(in_srgb,var(--sf-fg)_25%,transparent)] px-3 py-1">Apply</button>
+        <button type="submit" className="rounded-full bg-[var(--sf-fg)] px-4 py-1.5 font-semibold text-[var(--sf-bg)]">Apply</button>
       </form>
 
       {page.items.length === 0 ? (
@@ -71,10 +71,10 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         <ProductGrid store={store} items={page.items} />
       )}
 
-      <div className="mt-8 flex justify-center gap-3">
-        {cursor && <Link href={`${base}?sort=${sortKey}`} className="rounded-full border px-5 py-2 text-sm">Back to start</Link>}
+      <div className="mt-10 flex justify-center gap-3">
+        {cursor && <Link href={`${base}?sort=${sortKey}`} className="rounded-full border border-[color:var(--sf-line-strong)] px-6 py-3 text-sm font-semibold">Back to start</Link>}
         {page.nextCursor && (
-          <Link href={`${base}?sort=${sortKey}&after=${page.nextCursor}`} className="rounded-full bg-[var(--sf-primary)] px-5 py-2 text-sm text-[var(--sf-primary-fg)]">Show more</Link>
+          <Link href={`${base}?sort=${sortKey}&after=${page.nextCursor}`} className="rounded-full bg-[var(--sf-accent)] px-7 py-3 text-sm font-bold text-[var(--sf-accent-fg)]">Show more</Link>
         )}
       </div>
     </div>

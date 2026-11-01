@@ -55,7 +55,7 @@ export function LogoUploader({
   return (
     <div>
       <div className="flex items-center gap-4">
-        <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-muted/40">
+        <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white/[.03]">
           {value?.previewUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- local blob preview; next/image cannot optimise blob: URLs
             <img src={value.previewUrl} alt="Logo preview" className="size-full object-contain" />

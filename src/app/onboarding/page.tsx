@@ -32,8 +32,8 @@ export default async function OnboardingPage({
   };
 
   return (
-    <div className="min-h-svh bg-muted/30">
-      <header className="flex h-14 items-center justify-between border-b bg-background px-4 sm:px-6">
+    <div className="min-h-svh">
+      <header className="flex h-16 items-center justify-between px-4 sm:px-8">
         <span className="flex items-center gap-2 text-sm font-semibold tracking-tight">
           <span className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground"><Store className="size-3.5" /></span>
           Brand Portal
@@ -45,12 +45,12 @@ export default async function OnboardingPage({
       </header>
       <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="nv-title text-[clamp(26px,3.6vw,40px)]">
             {initial.isAdditional ? "Create another business" : `Welcome${session.name ? `, ${session.name.split(" ")[0]}` : ""} — let's set up your business`}
           </h1>
           {resumable && <p className="mt-1 text-sm text-muted-foreground">We saved your progress. Pick up where you left off.</p>}
         </div>
-        <div className="rounded-xl border bg-background p-5 shadow-sm sm:p-8">
+        <div className="nv-panel p-5 sm:p-8">
           <OnboardingWizard initial={initial} />
         </div>
       </main>

@@ -67,3 +67,16 @@ Phase 1/2 suites were re-run as regression and still pass (they are included in 
 Notes: the Chrome pass drove the UI end-to-end (category + product creation, inline category creation preserving the form, multi-image upload with cover change, filters/sort/search, edit, publish, archive, delete confirmations, anonymous storefront home/category/product pages,
 brand colours, image decoding, deactivation hiding content) and screenshots were inspected - which exposed two layout bugs (mobile grid overflow, clipped card actions) that my first overflow check had missed; both were fixed and re-verified with a stricter check.
 Expected 400/404 responses from deliberate negative tests are excluded from the console check (the script lists them). Everything ran on emulators/local; nothing was run against the real Firebase project.
+
+## Nova redesign - results
+| Check | Result |
+|---|---|
+| `tsc --noEmit` / ESLint | 0 errors / 0 warnings |
+| Unit | **88/88** (+2: theme legibility and light/dark variants) |
+| Rules | **57/57** |
+| Integration | **121/121** |
+| HTTP e2e | **65/65** (storefront/workspace checks all pass on the new markup) |
+| Real Chrome, **production build**, strict CSP, desktop 1280 + mobile 390 (`catalog-browser.mjs`, scratchpad) | **52/52**, 0 console/CSP errors, no mobile horizontal overflow |
+| Screenshot review (dev server, desktop + mobile, every screen incl. onboarding, auth, storefront) | all screens reviewed; 0 console errors; 0 mobile overflow |
+Notes: one Chrome run failed early (category image upload step) while a previous run's processes were still alive; an immediately repeated clean run passed 52/52. I did not isolate the cause beyond that, so treat it as a possible timing flake.
+The Chrome script's expectations were updated for the new copy (Overview "Launch readiness", light-theme storefront surface). Nothing was run against the real Firebase project.

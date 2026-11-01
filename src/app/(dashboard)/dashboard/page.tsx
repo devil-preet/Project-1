@@ -28,16 +28,16 @@ export default async function DashboardPage({
   return (
     <div className="space-y-6">
       {requestedDenied && (
-        <p role="status" className="rounded-lg border bg-background px-3 py-2 text-sm text-muted-foreground">
+        <p role="status" className="nv-panel rounded-2xl px-4 py-3 text-sm text-muted-foreground">
           That workspace isn&apos;t available to your account, so we opened one of yours instead.
         </p>
       )}
 
-      <section className="rounded-xl border bg-background p-5 shadow-sm sm:p-6">
+      <section className="nv-panel p-5 sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Active business</p>
-            <h1 className="mt-1 truncate text-2xl font-semibold tracking-tight">{business.name}</h1>
+            <p className="nv-kicker"><i className="nv-pulse" aria-hidden />Active business</p>
+            <h1 className="nv-title mt-3 truncate text-[clamp(28px,4vw,48px)]">{business.name}</h1>
             <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
               <Globe className="size-3.5" aria-hidden /> yourplatform.com/s/{business.slug}
             </p>
@@ -53,9 +53,9 @@ export default async function DashboardPage({
         <Link href={`/b/${active.businessId}/overview`} className={buttonVariants({ className: "mt-4" })}>Open workspace</Link>
       </section>
 
-      <section className="rounded-xl border bg-background shadow-sm">
+      <section className="nv-panel">
         <header className="flex items-center justify-between border-b px-5 py-3">
-          <h2 className="text-sm font-semibold">Your businesses</h2>
+          <h2 className="nv-label">Your businesses</h2>
           <Link href="/onboarding?new=1" className={buttonVariants({ variant: "outline", size: "sm" })}>
             <Plus className="size-3.5" /> New business
           </Link>
@@ -66,7 +66,7 @@ export default async function DashboardPage({
               <Link
                 href={`/dashboard?b=${m.businessId}`}
                 aria-current={m.businessId === active.businessId ? "true" : undefined}
-                className="flex items-center justify-between gap-3 px-5 py-3 text-sm transition-colors hover:bg-muted/50"
+                className="flex items-center justify-between gap-3 px-5 py-3 text-sm transition-colors hover:bg-white/[.04]"
               >
                 <span className="min-w-0 truncate font-medium">{m.business.name}</span>
                 <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">

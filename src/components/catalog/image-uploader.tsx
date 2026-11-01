@@ -90,7 +90,7 @@ export function ImageUploader({
       </div>
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {value.map((img, i) => (
-          <li key={img.mediaId} className={cn("group relative overflow-hidden rounded-lg border bg-muted/30", i === 0 && "ring-2 ring-primary")}>
+          <li key={img.mediaId} className={cn("group relative overflow-hidden rounded-lg border bg-transparent", i === 0 && "ring-2 ring-primary")}>
             {/* eslint-disable-next-line @next/next/no-img-element -- authenticated same-origin route; not optimisable by next/image */}
             <img src={img.url} alt={i === 0 ? "Cover image" : `Image ${i + 1}`} className="aspect-square w-full object-cover" />
             {i === 0 && <span className="absolute left-1.5 top-1.5 rounded bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">Cover</span>}
@@ -107,7 +107,7 @@ export function ImageUploader({
           </li>
         ))}
         {pending.map((p) => (
-          <li key={p.key} className="flex aspect-square flex-col items-center justify-center gap-2 rounded-lg border bg-muted/30 p-2 text-center" aria-live="polite">
+          <li key={p.key} className="flex aspect-square flex-col items-center justify-center gap-2 rounded-lg border bg-transparent p-2 text-center" aria-live="polite">
             <span className="line-clamp-1 text-xs text-muted-foreground">{p.name}</span>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={p.progress} aria-valuemin={0} aria-valuemax={100}>
               <div className="h-full bg-primary transition-all" style={{ width: `${p.progress}%` }} />
@@ -120,7 +120,7 @@ export function ImageUploader({
             <button
               type="button"
               onClick={() => input.current?.click()}
-              className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-lg border border-dashed text-sm text-muted-foreground transition-colors hover:bg-muted/50 focus-visible:outline-2"
+              className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-lg border border-dashed text-sm text-muted-foreground transition-colors hover:bg-white/[.04] focus-visible:outline-2"
             >
               <ImagePlus className="size-5" aria-hidden /> Add image
             </button>

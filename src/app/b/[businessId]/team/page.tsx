@@ -16,7 +16,7 @@ export default async function TeamPage({ params }: { params: Promise<{ businessI
   return (
     <>
       <PageHeader title="Team" description="People with access to this business. Invitations and role changes arrive in a later release." />
-      <ul className="divide-y rounded-xl border bg-background">
+      <ul className="nv-panel divide-y divide-[var(--nv-line)] overflow-hidden">
         {members.map((m) => (
           <li key={m.uid} className="flex items-center justify-between gap-3 px-5 py-3 text-sm">
             <span className="min-w-0">

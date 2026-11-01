@@ -125,3 +125,14 @@ publishing/settings. ADMIN/OWNER: everything (delete-business stays OWNER). Stat
 **D-33 e2e isolation.** `distDir` honours `NEXT_DIST_DIR` so the e2e script runs its own dev server beside a developer's `next dev` (separate lock and cache).
 
 **D-34 Public image caching (found by the manual regression).** Images were cached for 5 minutes, so an image still loaded from a cache after the store was unpublished. Now `max-age=60, s-maxage=60, must-revalidate` with an ETag (the immutable media id); revalidation re-runs the visibility check and returns 304 only while the asset is still public, 404 once hidden. Tested in `storefront.test.ts`.
+
+## Nova / Everloom redesign
+
+**D-35 Theme by token remap, not by rewriting components.** The shadcn semantic tokens are remapped to the Everloom palette and the app is dark-only, so every existing component (forms, dialogs, switches, selects) is themed without changing its behaviour.
+Nova-specific looks live in a small utility layer (`.nv-*`) in `globals.css`. See `DESIGN_SYSTEM.md`.
+
+**D-36 Nova is a visual reference only.** No prototype scripts, demo data or simulated features were imported. Prototype elements with no real counterpart (cart, command palette, live feed, search, designer) were not built; the Overview uses only real metrics.
+
+**D-37 Storefront keeps per-business branding.** Dark businesses get the Everloom base, light businesses a light variant of the same layout; the business accent colour is kept and auto-adjusted for legibility (`legibleAccent`).
+
+**D-38 Fonts through `next/font`.** Unbounded, Manrope and JetBrains Mono are self-hosted at build time, so the CSP did not need any new font host.

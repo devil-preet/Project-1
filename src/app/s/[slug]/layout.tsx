@@ -12,10 +12,15 @@ export default async function StorefrontLayout({ children, params }: { children:
   return (
     <div
       style={storefrontVars(store.theme)}
-      className="min-h-svh bg-[var(--sf-bg)] text-[var(--sf-fg)]"
+      className="relative isolate min-h-svh overflow-x-clip bg-[var(--sf-bg)] text-[var(--sf-fg)]"
     >
+      {/* Nova aurora, tinted by the brand accent. Covers the app-level background for this subtree. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 70% -15%, var(--sf-glow) 0%, transparent 40%)" }} />
+        <i className="absolute -left-[12vw] -top-[18vw] size-[46vw] rounded-full opacity-40 blur-[110px]" style={{ background: "radial-gradient(circle, color-mix(in srgb, var(--sf-accent) 55%, transparent), transparent 65%)" }} />
+      </div>
       <StoreHeader store={store} categories={categories} />
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</main>
+      <main className="mx-auto max-w-[1240px] px-5 pb-4 pt-6 sm:px-8">{children}</main>
       <StoreFooter store={store} />
     </div>
   );

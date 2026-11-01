@@ -12,7 +12,7 @@ import { listProducts } from "@/services/product.service";
 
 export const metadata: Metadata = { title: "Products" };
 
-const SELECT = "h-8 rounded-lg border border-input bg-background px-2 text-sm";
+const SELECT = "h-10 rounded-xl border border-[var(--nv-line-strong)] bg-[rgba(16,14,19,.78)] px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-[rgba(217,184,244,.2)]";
 
 export default async function ProductsPage({
   params, searchParams,
@@ -86,7 +86,7 @@ export default async function ProductsPage({
         )
       ) : (
         <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
-          {page.items.map((p) => <ProductCard key={p.id} businessId={businessId} product={p} can={can} />)}
+          {page.items.map((p, i) => <ProductCard key={p.id} businessId={businessId} product={p} can={can} index={i} />)}
         </ul>
       )}
 

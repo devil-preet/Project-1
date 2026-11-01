@@ -81,3 +81,9 @@ Details: `ARCHITECTURE.md` (routes, data, queries), `DECISIONS.md` D-24..D-33, `
 3. **Indexes:** none new. Confirm all 14 composites are READY (`npx firebase firestore:indexes`), or catalogue lists may fail with FAILED_PRECONDITION until they finish building.
 4. Existing businesses were created with currency USD; switch to INR in Settings **before** adding products if desired (locked afterwards).
 5. Optional: IAM Credentials API (resend-verification), Firestore TTL for `rateLimits`.
+
+---
+# Nova / Everloom redesign - handover
+Design source: Nova prototype (Everloom colours). Full description, tokens and deviations: `DESIGN_SYSTEM.md`; decisions D-35..D-38.
+**Changed:** global theme/tokens and fonts, UI primitives, workspace shell (rail + top bar), all workspace pages, dashboard, auth and onboarding screens, and the public storefront. **Not changed:** routes, API handlers, services, Firestore data, rules, indexes, permissions.
+**Not deployed. No Firebase configuration or data was touched.**

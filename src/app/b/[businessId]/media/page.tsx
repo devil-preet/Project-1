@@ -22,7 +22,7 @@ export default async function MediaPage({ params }: { params: Promise<{ business
       ) : (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {items.map((d) => (
-            <li key={d.id} className="overflow-hidden rounded-xl border bg-background">
+            <li key={d.id} className="nv-panel nv-panel-hover overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element -- authenticated same-origin route */}
               <img src={adminMediaUrl(businessId, d.id)} alt={String(d.get("fileName") ?? "Image")} loading="lazy" className="aspect-square w-full object-cover" />
               <p className="truncate px-3 py-2 text-xs text-muted-foreground" title={String(d.get("fileName"))}>

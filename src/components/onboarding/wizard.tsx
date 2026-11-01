@@ -254,7 +254,7 @@ export function OnboardingWizard({ initial }: { initial: WizardInitial }) {
               <Field label="Store address" htmlFor="slug" error={errors.slug?.message} compact
                 hint={slugState.status === "idle" && !errors.slug ? "Leave blank and we'll create one from your store name." : undefined}>
                 <div className="flex items-stretch overflow-hidden rounded-lg border border-input focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
-                  <span className="flex items-center border-r bg-muted/50 px-2.5 text-xs text-muted-foreground">yourplatform.com/s/</span>
+                  <span className="flex items-center border-r bg-white/[.04] px-2.5 text-xs text-muted-foreground">yourplatform.com/s/</span>
                   <input
                     id="slug"
                     className="h-9 min-w-0 flex-1 bg-transparent px-2.5 text-sm outline-none"
@@ -346,7 +346,7 @@ export function OnboardingWizard({ initial }: { initial: WizardInitial }) {
                 </span>],
                 ["Theme", v.defaultTheme === "dark" ? "Dark" : "Light"],
               ]} />
-              <p className="flex items-start gap-2 rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground">
+              <p className="flex items-start gap-2 rounded-lg bg-white/[.04] p-3 text-xs text-muted-foreground">
                 <CircleAlert className="mt-0.5 size-3.5 shrink-0" />
                 You&apos;ll be the Owner of this business. Your store address stays reserved for you and can&apos;t be taken by anyone else.
               </p>
@@ -413,7 +413,7 @@ function RadioCards({
             key={o.value}
             className={cn(
               "cursor-pointer rounded-lg border p-3 transition-colors has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50",
-              value === o.value ? "border-primary bg-primary/5" : "hover:bg-muted/50",
+              value === o.value ? "border-primary bg-primary/5" : "hover:bg-white/[.04]",
             )}
           >
             <input type="radio" name={legend} value={o.value} checked={value === o.value} onChange={() => onChange(o.value)} className="sr-only" />

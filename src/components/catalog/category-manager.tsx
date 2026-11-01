@@ -67,18 +67,18 @@ export function CategoryManager({
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {items.map((c, i) => (
-            <li key={c.id} className="flex flex-col overflow-hidden rounded-xl border bg-background">
-              <div className="aspect-[16/9] bg-muted/40">
+            <li key={c.id} className="flex flex-col nv-panel nv-panel-hover overflow-hidden">
+              <div className="relative aspect-[16/10] bg-white/[.03]">
                 {c.image ? (
                   // eslint-disable-next-line @next/next/no-img-element -- authenticated same-origin route
-                  <img src={c.image.url} alt={c.image.alt} className="size-full object-cover" loading="lazy" />
+                  <img src={c.image.url} alt={c.image.alt} className="absolute inset-0 size-full object-cover" loading="lazy" />
                 ) : (
                   <div className="flex size-full items-center justify-center text-muted-foreground"><FolderTree className="size-8" aria-hidden /></div>
                 )}
               </div>
               <div className="flex flex-1 flex-col gap-2 p-4">
                 <div className="flex items-start justify-between gap-2">
-                  <h2 className="min-w-0 truncate font-semibold">{c.name}</h2>
+                  <h2 className="min-w-0 truncate font-heading text-[17px] font-semibold tracking-tight">{c.name}</h2>
                   <Badge variant={c.active ? "secondary" : "outline"}>{c.active ? "Active" : "Hidden"}</Badge>
                 </div>
                 <p className="line-clamp-2 min-h-10 text-sm text-muted-foreground">{c.description || "No description"}</p>

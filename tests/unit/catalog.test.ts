@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { categoryAction, productAction, productFields, productListQuery, settingsAction } from "@/lib/validations/catalog";
 import { centsToInput, formatMoney, parseMoney } from "@/lib/utils/money";
 import { categoryQueryPlan, productQueryPlan } from "@/lib/catalog/query-plan";
-import { readableOn, storefrontVars } from "@/lib/catalog/theme";
+import { luminance, mix, readableOn, storefrontVars } from "@/lib/catalog/theme";
 import { can } from "@/lib/permissions";
 
 describe("money (integer minor units, no floats)", () => {
@@ -78,12 +78,26 @@ describe("query plans", () => {
   });
 });
 
-describe("storefront theme", () => {
+describe("storefront theme (Nova)", () => {
   it("picks readable foregrounds", () => {
     expect(readableOn("#FFFFFF")).toBe("#111111");
     expect(readableOn("#0B0F19")).toBe("#FFFFFF");
     expect(readableOn("#2563EB")).toBe("#FFFFFF");
-    expect(storefrontVars({ primary: "#111827", secondary: "#6B7280", accent: "#2563EB", background: "#FFFFFF" })["--sf-fg"]).toBe("#111111");
+  });
+  it("dark mode uses the Everloom base; light mode a light surface", () => {
+    const base = { primary: "#7C2D12", secondary: "#78716C", accent: "#D9B8F4" };
+    const dark = storefrontVars({ ...base, mode: "dark" });
+    expect(dark["--sf-bg"]).toBe("#100E13");
+    expect(dark["--sf-fg"]).toBe("#F8F3F7");
+    expect(dark["--sf-accent"]).toBe("#D9B8F4"); // already legible: unchanged
+    expect(storefrontVars({ ...base, mode: "light" })["--sf-bg"]).toBe("#FAF7F9");
+  });
+  it("lightens an accent that would vanish on the dark base, darkens one that would vanish on light", () => {
+    const darkAccent = storefrontVars({ primary: "#111827", secondary: "#6B7280", accent: "#111827", mode: "dark" })["--sf-accent"];
+    expect(luminance(darkAccent)).toBeGreaterThanOrEqual(0.3);
+    const paleAccent = storefrontVars({ primary: "#FFFFFF", secondary: "#6B7280", accent: "#F5F5F5", mode: "light" })["--sf-accent"];
+    expect(luminance(paleAccent)).toBeLessThanOrEqual(0.4);
+    expect(mix("#000000", "#FFFFFF", 0.5)).toBe("#808080");
   });
 });
 

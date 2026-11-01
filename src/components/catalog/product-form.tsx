@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { postJson } from "@/lib/api/client";
 import type { ProductDTO } from "@/lib/catalog/types";
-import { centsToInput, parseMoney } from "@/lib/utils/money";
+import { centsToInput, formatMoney, parseMoney } from "@/lib/utils/money";
 import type { ProductStatus } from "@/types";
 import { CategoryDialog } from "./category-dialog";
 import { ImageUploader, type ImageItem } from "./image-uploader";
@@ -22,7 +22,7 @@ interface CategoryOption {
   active: boolean;
 }
 
-const SELECT = "h-8 w-full rounded-lg border border-input bg-background px-2 text-sm";
+const SELECT = "h-10 w-full rounded-xl border border-[var(--nv-line-strong)] bg-[rgba(16,14,19,.78)] px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-[rgba(217,184,244,.2)]";
 
 function Err({ msgs }: { msgs?: string[] }) {
   return <p className="min-h-4 text-xs text-destructive" role={msgs?.length ? "alert" : undefined}>{msgs?.[0]}</p>;
@@ -98,9 +98,9 @@ export function ProductForm({
   const isBusy = busy !== null;
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); void submit(current); }} noValidate className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <form onSubmit={(e) => { e.preventDefault(); void submit(current); }} noValidate className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
       <div className="space-y-6">
-        <section className="space-y-4 rounded-xl border bg-background p-5">
+        <section className="space-y-4 nv-panel p-5 sm:p-6">
           <div className="space-y-1.5">
             <Label htmlFor="p-name">Product name</Label>
             <Input id="p-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} aria-invalid={!!fields.name} autoFocus={!product} />
@@ -146,7 +146,7 @@ export function ProductForm({
           </div>
         </section>
 
-        <details className="rounded-xl border bg-background p-5">
+        <details className="nv-panel p-5 sm:p-6">
           <summary className="cursor-pointer text-sm font-semibold">More options (SKU, inventory, SEO)</summary>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
@@ -193,8 +193,29 @@ export function ProductForm({
         </details>
       </div>
 
-      <aside className="space-y-3 lg:sticky lg:top-6 lg:self-start">
-        <div className="space-y-3 rounded-xl border bg-background p-5">
+      <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <div className="nv-panel nv-panel-accent p-4" aria-label="Live storefront preview">
+          <p className="nv-kicker mb-3 !text-primary">Live preview</p>
+          <div className="rounded-[20px] border border-[var(--nv-line)] bg-[rgba(16,14,19,.7)] p-2">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[14px] bg-white/[.04]">
+              {images[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element -- authenticated same-origin route
+                <img src={images[0].url} alt="" className="size-full object-cover" />
+              ) : (
+                <div className="flex size-full items-center justify-center text-xs text-muted-foreground">Cover image appears here</div>
+              )}
+              {availability === "out_of_stock" && <span className="nv-mono absolute left-2.5 top-2.5 rounded-full bg-white px-2.5 py-1 text-[10.5px] font-semibold text-[#100E13]">Out of stock</span>}
+            </div>
+            <div className="px-2 pb-2 pt-3">
+              <p className="nv-mono text-[10.5px] uppercase tracking-[.1em] text-muted-foreground">{categories.find((c) => c.id === categoryId)?.name ?? "Category"}</p>
+              <p className="mt-1 line-clamp-2 text-[15px] font-bold">{name.trim() || "Product name"}</p>
+              <p className="nv-mono mt-1 text-[15px] font-semibold">
+                {parseMoney(price) !== null ? formatMoney(parseMoney(price) as number, currency) : formatMoney(0, currency)}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-3 nv-panel p-5 sm:p-6">
           <p className="text-sm text-muted-foreground">
             Status: <strong className="text-foreground">{current === "active" ? "Live" : current === "draft" ? "Draft" : "Archived"}</strong>
           </p>

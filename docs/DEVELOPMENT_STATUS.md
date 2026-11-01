@@ -58,3 +58,7 @@ Not done: team invitations/role changes, media deletion UI, product bulk actions
 ## External dependencies / pending approvals
 1. **Deploy `firestore.indexes.json`** (+ rules) — approval required. 2. Enable IAM Credentials API + role (D-10). 3. Firestore TTL on `rateLimits.expiresAt`. 4. `npx firebase login` (deploys only).
 5. Auth authorized domains / email template action URL once a domain exists. 6. Billing decisions for production (unchanged).
+
+## Nova / Everloom redesign (done locally, not deployed)
+Every existing screen was restyled to the Nova design (see `DESIGN_SYSTEM.md`) with behaviour unchanged. Added presentation-only features: Overview command center (ring, stats, bars, readiness), live storefront preview in the product form and Branding.
+Known gaps: no light theme for the portal (dark-only by design); the Nova cart/command palette/live feed are intentionally absent; fonts and glow effects were verified on Chrome only.

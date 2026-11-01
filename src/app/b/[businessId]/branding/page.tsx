@@ -20,6 +20,7 @@ export default async function BrandingPage({ params }: { params: Promise<{ busin
       <BrandingForm
         key={String(b.updateTime?.toMillis())}
         businessId={businessId}
+        storeName={String(b.get("displayName") ?? ws.business.name)}
         canUpload={ws.can("media:upload")}
         initial={{
           primaryColor: String(b.get("primaryColor") ?? "#111827"),
